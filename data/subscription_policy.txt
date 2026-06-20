@@ -1,0 +1,3 @@
+Customers can cancel subscriptions at any time.
+No cancellation fee is charged.
+Subscription benefits remain active until the end of the billing cycle.

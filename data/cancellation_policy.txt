@@ -1,0 +1,3 @@
+Orders can be cancelled before shipment.
+Once shipped, orders cannot be cancelled.
+Refunds for cancelled orders are processed within 5 business days.

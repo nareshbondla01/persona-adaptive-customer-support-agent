@@ -1,0 +1,3 @@
+Customer data is encrypted and stored securely.
+Personal information is never sold to third parties.
+Users may request data deletion at any time.
