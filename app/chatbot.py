@@ -1,7 +1,11 @@
 from dotenv import load_dotenv
+import os
+
 from langchain_groq import ChatGroq
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from app.personas import detect_persona
 from app.personas import get_system_prompt
@@ -9,14 +13,26 @@ from app.escalation import needs_escalation
 
 load_dotenv()
 
+documents = []
+
+for filename in os.listdir("data"):
+    loader = TextLoader(os.path.join("data", filename))
+    documents.extend(loader.load())
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=50
+)
+
+chunks = splitter.split_documents(documents)
+
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-db = FAISS.load_local(
-    "faiss_index",
-    embeddings,
-    allow_dangerous_deserialization=True
+db = FAISS.from_documents(
+    chunks,
+    embeddings
 )
 
 llm = ChatGroq(
@@ -51,4 +67,3 @@ def get_answer(query):
     response = llm.invoke(prompt)
 
     return response.content
-
